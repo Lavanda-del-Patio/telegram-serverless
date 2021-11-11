@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  lavanda-telegram-serverless
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+Resources:
+  TelegramMessage:
+    Type: AWS::Serverless::Function 
+    Properties:
+      Handler: app.lambda_handler
+      FunctionName: lavanda-telegram-message
+      Runtime: python3.8
+      Events:
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTelegramMessage
+  SNSTelegramMessage:
+    Type: 'AWS::SNS::Topic'   
+    Properties:
+      TopicName: telegram-message   
+Outputs:
+  TelegramMessage:
+    Description: "Telegram message ARN"
+    Value: !GetAtt TelegramMessage.Arn
